@@ -1,4 +1,8 @@
 import FiberTree from '../Fiber';
+import {
+  paintCircle,
+  paintCompleteLink, setLastChild, setPrevSibling,
+} from '../Tree';
 
 let workInProgress = FiberTree;
 let frameInterval = 1;
@@ -71,9 +75,15 @@ function completeUnitOfWork(unitOfWork) {
     
     const siblingFiber = completedWork.sibling;
     if (siblingFiber !== null) {
+      setPrevSibling(completedWork);
+      setLastChild(null);
+      
       workInProgress = siblingFiber;
       return;
     }
+    
+    setPrevSibling(null);
+    setLastChild(completedWork);
     
     completedWork = returnFiber;
     workInProgress = completedWork;
@@ -82,6 +92,8 @@ function completeUnitOfWork(unitOfWork) {
 
 function beginWork(workInProgress) {
   console.log('Begin work: ', workInProgress.name);
+  
+  paintCircle(workInProgress);
   
   if (workInProgress.child !== null) {
     return workInProgress.child;
@@ -92,6 +104,8 @@ function beginWork(workInProgress) {
 
 function completeWork(workInProgress) {
   console.log('Complete work: ', workInProgress.name);
+  
+  paintCompleteLink(workInProgress);
   
   return null;
 }
@@ -209,6 +223,7 @@ export const setConcurrent = (bool) => {
 };
 
 export const start = () => {
+  // reset();
   ensureRootIsScheduled(FiberTree);
   workInProgress = FiberTree;
 };

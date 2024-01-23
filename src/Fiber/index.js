@@ -1,7 +1,9 @@
-import Tree from './data.js';
+import { treeLayout } from '../Tree';
 
 function createFiberTree(tree, parentNode) {
   const fiberNode = createFiber(tree);
+  fiberNode.x = tree.x;
+  fiberNode.y = tree.y;
   if (parentNode) {
     if (parentNode.child === null) {
       parentNode.child = fiberNode;
@@ -24,7 +26,7 @@ function createFiberTree(tree, parentNode) {
 }
 
 function createFiber(node) {
-  return new FiberNode(node.name);
+  return new FiberNode(node.name || node.data.name);
 }
 
 function FiberNode(name) {
@@ -34,6 +36,6 @@ function FiberNode(name) {
   this.return = null;
 }
 
-let FiberTree = createFiberTree(Tree);
+let FiberTree = createFiberTree(treeLayout);
 
 export default FiberTree;
