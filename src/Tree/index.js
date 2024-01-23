@@ -44,7 +44,7 @@ export function init() {
   select('#container > svg')
     .append('defs')
     .append('marker')
-    .attr('id', 'arrowhead')
+    .attr('id', 'beginArrow')
     .attr('refX', 0)
     .attr('refY', 5)
     .attr('markerWidth', 100)
@@ -52,7 +52,20 @@ export function init() {
     .attr('orient', 'auto') // 这个属性设置后可以根据线条方向进行旋转
     .append('path')
     .attr('d', 'M5,0 L5,10 L0,5 Z')
-    .attr('fill', 'black');
+    .attr('fill', '#1860c0');
+  
+  select('#container > svg')
+    .append('defs')
+    .append('marker')
+    .attr('id', 'completeArrow')
+    .attr('refX', 0)
+    .attr('refY', 5)
+    .attr('markerWidth', 100)
+    .attr('markerHeight', 100)
+    .attr('orient', 'auto') // 这个属性设置后可以根据线条方向进行旋转
+    .append('path')
+    .attr('d', 'M5,0 L5,10 L0,5 Z')
+    .attr('fill', '#f68939');
 }
 
 export function paintCircle(workInProgress) {
@@ -88,7 +101,9 @@ function paintBeginLink(workInProgress) {
     
     appendPath(
       `${ prevName }To${ name }`,
-      `M ${ x - r } ${ y } L ${ prevX + r } ${ prevY }`
+      '#1860c0',
+      `M ${ x - r } ${ y } L ${ prevX + r } ${ prevY }`,
+      'beginArrow'
     );
     
     if (!workInProgress.sibling) {
@@ -112,7 +127,9 @@ function paintBeginLink(workInProgress) {
   
   appendPath(
     `${ prevName }To${ name }`,
-    `M ${ x + dxx } ${ y - dyy } L ${ prevX - dxx } ${ prevY + dyy }`
+    '#1860c0',
+    `M ${ x + dxx } ${ y - dyy } L ${ prevX - dxx } ${ prevY + dyy }`,
+    'beginArrow'
   );
 }
 
@@ -122,7 +139,9 @@ export function paintCompleteLink(workInProgress) {
     const dz = Math.sqrt(r ** 2 - (r / 2) ** 2);
     appendPath(
       `${ name }Complete`,
-      `M ${ x + (r / 2) } ${ y + dz } C ${ x + (2.5 * r) } ${ y + (2 * r) + dz } ${ x - (2.5 * r) } ${ y + (2 * r) + dz } ${ x - (r / 2) } ${ y + dz }`
+      '#f68939',
+      `M ${ x + (r / 2) } ${ y + dz } C ${ x + (2.5 * r) } ${ y + (2 * r) + dz } ${ x - (2.5 * r) } ${ y + (2 * r) + dz } ${ x - (r / 2) } ${ y + dz }`,
+      'completeArrow'
     );
   }
   if (lastChild) {
@@ -147,12 +166,16 @@ export function paintCompleteLink(workInProgress) {
       
       appendPath(
         `${ name }To${ lastChildName }`,
-        `M ${ lastChildX - dx1 } ${ lastChildY - dy1 } L ${ x + dx2 } ${ y + dy2 }`
+        '#1860c0',
+        `M ${ lastChildX - dx1 } ${ lastChildY - dy1 } L ${ x + dx2 } ${ y + dy2 }`,
+        'beginArrow'
       );
       
       appendPath(
         `${ name }Complete`,
-        `M ${ x - dx2 } ${ y + dy2 } L ${ lastChildX + dx1 } ${ lastChildY - dy1 }`
+        '#f68939',
+        `M ${ x - dx2 } ${ y + dy2 } L ${ lastChildX + dx1 } ${ lastChildY - dy1 }`,
+        'completeArrow'
       );
       
       return;
@@ -163,20 +186,22 @@ export function paintCompleteLink(workInProgress) {
     
     appendPath(
       `${ name }Complete`,
-      `M ${ x + dxx } ${ y + dyy } L ${ lastChildX - dxx } ${ lastChildY - dyy }`
+      '#f68939',
+      `M ${ x + dxx } ${ y + dyy } L ${ lastChildX - dxx } ${ lastChildY - dyy }`,
+      'completeArrow'
     );
   }
 }
 
-function appendPath(id, path) {
+function appendPath(id, color, path, arrow) {
   gLink.append('path')
     .attr('id', id)
     .attr('fill', 'none')
-    .attr('stroke', '#313131')
+    .attr('stroke', color)
     .attr('d', _ => {
       return path;
     })
-    .attr('marker-start', 'url(#arrowhead)');
+    .attr('marker-start', `url(#${ arrow })`);
 }
 
 export function setPrevSibling(fiber) {

@@ -33,6 +33,8 @@ function workLoopConcurrent() {
   while (workInProgress !== null && !shouldYield()) {
     performUnitOfWork(workInProgress);
   }
+  
+  console.log('break');
 }
 
 function renderRootSync() {
@@ -213,7 +215,7 @@ function workLoop() {
 }
 
 
-let isConcurrent = false;
+let isConcurrent = true;
 const startSyncOrConcurrent = () => {
   return isConcurrent;
 };
