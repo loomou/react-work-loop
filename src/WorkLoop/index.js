@@ -1,7 +1,7 @@
 import FiberTree from '../Fiber';
 import {
   paintCircle,
-  paintCompleteLink, setLastChild, setPrevSibling,
+  paintCompleteLink, reset, setLastChild, setPrevSibling,
 } from '../Tree';
 
 let workInProgress = FiberTree;
@@ -223,7 +223,7 @@ export const setConcurrent = (bool) => {
 };
 
 export const start = () => {
-  // reset();
+  reset();
   ensureRootIsScheduled(FiberTree);
   workInProgress = FiberTree;
 };

@@ -1,7 +1,7 @@
-import { select, zoom, tree, hierarchy } from 'd3';
+import { select, selectAll, zoom, tree, hierarchy } from 'd3';
 import Tree from '../Fiber/data';
 
-const width = 1400;
+const width = 1000;
 const height = 800;
 
 const d3tree = tree()
@@ -21,21 +21,24 @@ export function init() {
   svg = select('#container')
     .append('svg')
     .classed('chart', true)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('width', width)
     .attr('height', height)
-    .attr('viewBox', `${ -(width / 2) } ${ -(height / 2) } ${ width } ${ height }`);
+    .attr('viewBox', `${ -(width / 2.3) } ${ -(height / 8) } ${ width } ${ height }`);
   
   gNode = svg.append('g')
-    .attr('id', 'circles');
+    .attr('id', 'circles')
+    .attr('dx', `${ width / 2 }`);
   
   gLink = svg.append('g')
     .attr('id', 'links');
   
   svg.call(
-    zoom().on('zoom', ev => {
-      gNode.attr('transform', ev.transform);
-      gLink.attr('transform', ev.transform);
-    })
+    zoom()
+      .on('zoom', ev => {
+        gNode.attr('transform', ev.transform);
+        gLink.attr('transform', ev.transform);
+      })
   );
   
   select('#container > svg')
@@ -64,6 +67,8 @@ export function paintCircle(workInProgress) {
     .attr('r', r);
   gNode.select(`#${ name }`)
     .append('text')
+    .attr('dy', '0.28em')
+    .attr('dx', '-0.2em')
     .text(name);
   paintBeginLink(workInProgress);
 }
@@ -84,7 +89,7 @@ function paintBeginLink(workInProgress) {
     appendPath(
       `${ prevName }To${ name }`,
       `M ${ x - r } ${ y } L ${ prevX + r } ${ prevY }`
-    )
+    );
     
     if (!workInProgress.sibling) {
       setPrevSibling(null);
@@ -108,7 +113,7 @@ function paintBeginLink(workInProgress) {
   appendPath(
     `${ prevName }To${ name }`,
     `M ${ x + dxx } ${ y - dyy } L ${ prevX - dxx } ${ prevY + dyy }`
-  )
+  );
 }
 
 export function paintCompleteLink(workInProgress) {
@@ -118,7 +123,7 @@ export function paintCompleteLink(workInProgress) {
     appendPath(
       `${ name }Complete`,
       `M ${ x + (r / 2) } ${ y + dz } C ${ x + (2.5 * r) } ${ y + (2 * r) + dz } ${ x - (2.5 * r) } ${ y + (2 * r) + dz } ${ x - (r / 2) } ${ y + dz }`
-    )
+    );
   }
   if (lastChild) {
     const lastChildX = lastChild.x;
@@ -143,12 +148,12 @@ export function paintCompleteLink(workInProgress) {
       appendPath(
         `${ name }To${ lastChildName }`,
         `M ${ lastChildX - dx1 } ${ lastChildY - dy1 } L ${ x + dx2 } ${ y + dy2 }`
-      )
+      );
       
       appendPath(
         `${ name }Complete`,
         `M ${ x - dx2 } ${ y + dy2 } L ${ lastChildX + dx1 } ${ lastChildY - dy1 }`
-      )
+      );
       
       return;
     }
@@ -159,7 +164,7 @@ export function paintCompleteLink(workInProgress) {
     appendPath(
       `${ name }Complete`,
       `M ${ x + dxx } ${ y + dyy } L ${ lastChildX - dxx } ${ lastChildY - dyy }`
-    )
+    );
   }
 }
 
@@ -180,4 +185,10 @@ export function setPrevSibling(fiber) {
 
 export function setLastChild(fiber) {
   lastChild = fiber;
+}
+
+export function reset() {
+  setPrevSibling(null);
+  setLastChild(null);
+  selectAll('#container > svg g > *').remove();
 }
