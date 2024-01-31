@@ -5,23 +5,23 @@ const Tree = {
       name: 'b',
       children: [
         {
-          name: 'e',
+          name: 'd',
           children: [
             {
-              name: 'i'
+              name: 'h'
             },
             {
-              name: 'j',
+              name: 'i',
               children: [
                 {
-                  name: 'p'
+                  name: 'o'
                 }
               ]
             }
           ]
         },
         {
-          name: 'f',
+          name: 'e',
         }
       ]
     },
@@ -29,27 +29,27 @@ const Tree = {
       name: 'c',
       children: [
         {
-          name: 'g',
+          name: 'f',
           children: [
             {
-              name: 'k',
+              name: 'j',
             },
             {
-              name: 'l'
+              name: 'k'
             }
           ]
         },
         {
-          name: 'h',
+          name: 'g',
           children: [
+            {
+              name: 'l'
+            },
             {
               name: 'm'
             },
             {
               name: 'n'
-            },
-            {
-              name: 'o'
             }
           ]
         }
