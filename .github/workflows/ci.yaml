@@ -1,0 +1,49 @@
+name: Deploy to Github Page
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - README.md
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - README.md
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        # 选择要使用的 node 版本
+        node-version: '18.x'
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        # 选择要使用的 node 版本
+        version: '8'
+
+      # 安装依赖
+    - name: Install dependencies
+      run: pnpm install
+
+      # 运行构建脚本
+    - name: Build frontend
+      run: pnpm build
+      env:
+        NODE_OPTIONS: "--max-old-space-size=4096"
+
+    # 部署到 GitHub pages
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        publish_dir: ./dist
+        github_token: ${{ secrets.ACCESS_TOKEN }}
