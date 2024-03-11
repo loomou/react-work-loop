@@ -8,3 +8,5 @@
 <img width="959" alt="sync" src="https://github.com/loomou/react-work-loop/assets/63936770/e612b8d0-7be8-4b38-aa21-fe8d92c6b744">
 <img width="959" alt="sync" src="https://github.com/loomou/react-work-loop/assets/63936770/9e1693b5-341c-4675-a5ee-0fd1a51a4c9d">
 
+## 推荐
+[什么，你还不会chrome自定义性能降速？](https://juejin.cn/post/7321540587852775458)
